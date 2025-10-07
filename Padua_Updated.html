@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countries of the World</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #D3D3D3;
+      color: #333;
+      position: relative;
+    }
+
+   
+    .background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+  
+    header {
+      background-color: rgba(255, 182, 193, 0.8);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 3em;
+    }
+
+   
+    nav {
+      background-color: rgba(51, 51, 51, 0.8);
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      margin: 0 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #ffb6c1;
+    }
+
+    
+    .countries {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 20px;
+      perspective: 1000px;
+    }
+
+    .country-container {
+      width: 300px;
+      height: 400px;
+      margin: 20px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+
+    .country-container:hover {
+      transform: rotateY(180deg);
+    }
+
+    .country,
+    .country-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      backface-visibility: hidden;
+    }
+
+    .country {
+      background-color: rgba(214, 255, 255, 0.8);
+    }
+
+    .country-back {
+      background-color: rgba(255, 255, 255, 0.9);
+      transform: rotateY(180deg);
+    }
+
+    .country img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .country img:hover {
+      transform: scale(1.1);
+    }
+
+    .country h2 {
+      font-size: 1.8em;
+      margin-top: 10px;
+      color: #333;
+    }
+
+    .country p {
+      font-size: 1em;
+      color: #777;
+      margin-top: 10px;
+    }
+
+    
+    form {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    form input,
+    form select,
+    form button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    form button {
+      background-color: #ffb6c1;
+      border: none;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #ff8c9b;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+
+   
+    #loginScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      position: fixed;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .login-box {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .login-box button {
+      background-color: #ffb6c1;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .login-box button:hover {
+      background-color: #ff8c9b;
+    }
+
+    #mainContent {
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .countries {
+        justify-content: center;
+      }
+
+      .country-container {
+        width: 100%;
+        height: auto;
+      }
+
+      nav a {
+        font-size: 1.1em;
+        padding: 8px 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      nav a {
+        font-size: 1em;
+        padding: 6px 12px;
+      }
+
+      form input,
+      form select,
+      form button {
+        padding: 12px;
+      }
+
+      footer p {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>Login to Continue</h2>
+<video class="background-video" autoplay muted loop>
+      <source src="21.mp4" type="video/mp4">
+    </video>
+
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button onclick="login()">Login</button>
+      <p id="loginMessage"></p>
+    </div>
+  </div>
+
+  
+  <div id="mainContent">
+    <video class="background-video" autoplay muted loop>
+      <source src="277097.mp4" type="video/mp4">
+    </video>
+
+    <header>
+      <h1>Countries of the World</h1>
+    </header>
+
+    <nav>
+      <a href="#us">United States</a>
+      <a href="#canada">Canada</a>
+      <a href="#japan">Japan</a>
+      <a href="#brazil">Brazil</a>
+      <a href="#australia">Australia</a>
+    </nav>
+
+    <section class="countries">
+      <div class="country-container" id="us">
+        <div class="country">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+            alt="USA Flag">
+          <h2>United States</h2>
+          <p>The United States is a country primarily located in North America.</p>
+        </div>
+        <div class="country-back">
+          <h3>More Information</h3>
+          <p>Known for its diverse culture, technological advancements, and political influence around the world.</p>
+        </div>
+      </div>
+
+      <div class="country-container" id="canada">
+        <div class="country">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada_%28Pantone%29.svg"
+            alt="Canada Flag">
+          <h2>Canada</h2>
+          <p>Canada is the second-largest country in the world by total area.</p>
+        </div>
+        <div class="country-back">
+          <h3>More Information</h3>
+          <p>Famous for its natural beauty, multicultural cities, and friendly people.</p>
+        </div>
+      </div>
+
+      <div class="country-container" id="japan">
+        <div class="country">
+          <img src="https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg" alt="Japan Flag">
+          <h2>Japan</h2>
+          <p>Japan is an island nation in East Asia, known for its rich culture and advanced technology.</p>
+        </div>
+        <div class="country-back">
+          <h3>More Information</h3>
+          <p>Blends ancient traditions with modern technology.</p>
+        </div>
+      </div>
+
+      <div class="country-container" id="brazil">
+        <div class="country">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Brazil Flag">
+          <h2>Brazil</h2>
+          <p>Brazil is the largest country in South America, known for its rainforests and soccer culture.</p>
+        </div>
+        <div class="country-back">
+          <h3>More Information</h3>
+          <p>Home to the Amazon rainforest, Brazil is rich in biodiversity and cultural heritage.</p>
+        </div>
+      </div>
+
+      <div class="country-container" id="australia">
+        <div class="country">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg" alt="Australia Flag">
+          <h2>Australia</h2>
+          <p>Australia is an island country and continent located in the Southern Hemisphere.</p>
+        </div>
+        <div class="country-back">
+          <h3>More Information</h3>
+          <p>Famous for its wildlife, beaches, and unique culture, Australia offers an unforgettable experience.</p>
+        </div>
+      </div>
+    </section>
+
+   <form id="contactForm">
+  <h2>Contact Us</h2>
+  <label for="name">Your Name</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="email">Your Email</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="message">Leave a Message</label>
+  <input type="message" id="message" name="message" required>
+
+
+ 
+  <label for="country">Select your country</label>
+  <select id="country" name="country">
+    <option value="us">United States</option>
+    <option value="canada">Canada</option>
+    <option value="japan">Japan</option>
+    <option value="brazil">Brazil</option>
+    <option value="australia">Australia</option>
+  </select>
+
+  <button type="submit">Submit</button>
+  <p id="contactMessage" style="color: green; margin-top: 10px;"></p>
+</form>
+
+<script>
+
+  document.getElementById("contactForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // Prevent the page from reloading
+    document.getElementById("contactMessage").textContent = "Thank you for messaging us!";
+   
+    this.reset();
+  });
+</script>
+
+    <footer>
+      <p>&copy; 2025 Countries Information</p>
+    </footer>
+  </div>
+
+  <script>
+    let maxAttempts = 3;
+    let attempts = 0;
+
+    function login() {
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      let message = document.getElementById("loginMessage");
+
+      if (username === "lance" && password === "1234") {
+        message.style.color = "green";
+        message.textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+          document.getElementById("loginScreen").style.display = "none";
+          document.getElementById("mainContent").style.display = "block";
+        }, 1000);
+      } else {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          message.style.color = "red";
+          message.textContent = "Maximum attempts reached. Try again later.";
+          document.getElementById("username").disabled = true;
+          document.getElementById("password").disabled = true;
+          document.querySelector(".login-box button").disabled = true;
+        } else {
+          message.style.color = "red";
+          message.textContent = `Invalid credentials. Attempt ${attempts} of ${maxAttempts}.`;
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
